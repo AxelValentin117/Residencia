@@ -1,7 +1,7 @@
 @extends('layouts.plantilla')
 @section('title','Cursos')
 @section('content')
-    <h1>Aqui podras crear un curso pruebasv1</h1>
+    <h1>Aqui podras crear un curso pruebasv2</h1>
     <a href="{{route('cursos.create')}}">Crear curso</a>
     <ul>
         @foreach ($cursos as $curso)
