@@ -1,7 +1,7 @@
 @extends('layouts.plantilla')
 @section('title','cursos edit')
 @section('content')
-    <h1>En esta pagina podras editar un curso de esta version</h1>
+    <h1>En esta pagina podras editar un curso de esta nueva version</h1>
     <form action="{{route('cursos.update', $curso)}}" method="post">
         @csrf
         @method()
