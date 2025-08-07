@@ -13,6 +13,6 @@ Route::post('cursos',[CursoController::class,'store'])->name('cursos.store');
 
 Route::get('cursos/{id}',[CursoController::class, 'show'])->name('cursos.show');
 
-Route::get('cursos/{id}/edit',[CursoController::class, 'edit'])->name('cursos.edit');
+Route::get('cursos/{curso}/edit',[CursoController::class, 'edit'])->name('cursos.edit');
 
-Route::post('cursos/{curso}',[CursoController::class, 'update'])->name('cursos.update');
+Route::put('cursos/{curso}',[CursoController::class, 'update'])->name('cursos.update');
