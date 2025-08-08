@@ -30,4 +30,4 @@
         <button type="submit">Actualizar Formulario</button>
     </form>
 
-@endsection1
+@endsection
