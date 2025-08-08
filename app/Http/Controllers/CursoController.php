@@ -23,7 +23,8 @@ class CursoController extends Controller
         $curso  = Curso::create($request->all());
         return redirect()->route('cursos.show',$curso);
     }
-    public function show(Curso $curso){
+    public function show($id){
+        $curso = Curso::find($id);
         return view('cursos.show',compact('curso'));
     }
 
