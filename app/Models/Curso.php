@@ -9,4 +9,9 @@ class Curso extends Model
 {
     use HasFactory;
     protected $fillable = ['name','descripcion','categoria'];
+
+    public function cuestionario()
+    {
+        return $this->hasOne(Cuestionario::class, 'curso_id');
+    }
 }

@@ -3,9 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CursoController;
+use App\Http\Controllers\PreguntaController;
 
 Route::get('/', HomeController::class);
 
-Route::get('asignaturas/{id}cuestionarios',[CursoController::class, 'cuestionarios'])->name('cursos.cuestionarios');
+Route::get('asignaturas/{curso}/cuestionarios', [CursoController::class, 'cuestionarios'])->name('cursos.cuestionarios');
 
-Route::resource('asignaturas', CursoController::class)->parameters(['asignaturas'=>'curso'])->names('cursos');
+Route::post('asignaturas/{curso}/preguntas', [PreguntaController::class, 'store'])->name('preguntas.store');
+
+Route::resource('asignaturas', CursoController::class)
+    ->parameters(['asignaturas' => 'curso'])
+    ->names('cursos');
+

@@ -25,6 +25,7 @@ class CursoController extends Controller
     }
 
     public function show($id){
+        $curso = Curso::with('cuestionario.preguntas')->findOrFail($id);
         $curso = Curso::find($id);
         return view('cursos.show',compact('curso'));
     }

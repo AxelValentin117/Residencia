@@ -12,4 +12,17 @@
         @method('delete')
         <button type="submit">Eliminar</button>
     </form>
+
+    <h2>Preguntas del cuestionario</h2>
+
+    @if($curso->cuestionario && $curso->cuestionario->preguntas->count() > 0)
+    <ul>
+        @foreach($curso->cuestionario->preguntas as $pregunta)
+            <li>{{ $pregunta->text_pregunta }}</li>
+        @endforeach
+    </ul>
+    @else
+    <p>No hay preguntas aún.</p>
+    @endif
+
 @endsection
