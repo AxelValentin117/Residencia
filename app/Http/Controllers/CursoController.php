@@ -23,6 +23,7 @@ class CursoController extends Controller
         $curso  = Curso::create($request->all());
         return redirect()->route('cursos.show',$curso);
     }
+
     public function show($id){
         $curso = Curso::find($id);
         return view('cursos.show',compact('curso'));
@@ -48,5 +49,11 @@ class CursoController extends Controller
 
         return redirect()->route('cursos.index');
     }
+
+    public function cuestionarios($id){
+        $curso = Curso::findOrfail($id);
+        return view('cursos.cuestionarios', compact('curso'));
+    }
+
     
 }
