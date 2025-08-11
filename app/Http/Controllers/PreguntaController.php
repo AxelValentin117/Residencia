@@ -16,7 +16,7 @@ class PreguntaController extends Controller
             'preguntas' => 'required|string|max:255',
         ]);
 
-        // Buscar o crear cuestionario para el curso
+        
         $cuestionario = $curso->cuestionario;
 
         if (!$cuestionario) {
@@ -28,13 +28,16 @@ class PreguntaController extends Controller
             $cuestionario->update(['titulo' => $request->titulo]);
         }
 
-        // Crear pregunta relacionada
+       
         Pregunta::create([
             'cuestionario_id' => $cuestionario->id,
             'text_pregunta' => $request->preguntas,
         ]);
 
+        
+
         return redirect()->route('cursos.show', $curso)->with('success', 'Pregunta agregada correctamente');
+
 
     }
 }
