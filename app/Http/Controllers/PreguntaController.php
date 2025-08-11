@@ -35,7 +35,7 @@ class PreguntaController extends Controller
 
        
         Pregunta::create([
-            'cuestionario_iddd' => $cuestionario->id,
+            'cuestionario_id' => $cuestionario->id,
             'text_pregunta' => $request->preguntas,
         ]);
 
@@ -66,8 +66,7 @@ class PreguntaController extends Controller
             'text_pregunta' => $request->text_pregunta
         ]);
 
-        return redirect()->route('cursos.show', $curso)
-                        ->with('success', 'Pregunta actualizada correctamente.');
+        return redirect()->route('cursos.show', $curso)->with('success', 'Pregunta actualizada correctamente.');
     }
 
     public function destroy(Curso $curso, Pregunta $pregunta){
