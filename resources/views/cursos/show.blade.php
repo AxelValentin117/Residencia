@@ -12,7 +12,9 @@
         @method('delete')
         <button type="submit">Eliminar</button>
     </form>
-
+    <br>
+    <a href="{{ route('preguntas.editarcuestionario', $curso) }}">Editar cuestionario</a>
+    <br>
     <h2>Preguntas del cuestionario</h2>
 
     @if($curso->cuestionario && $curso->cuestionario->preguntas->count() > 0)

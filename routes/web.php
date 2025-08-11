@@ -5,18 +5,23 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\PreguntaController;
 
-Route::get('/', HomeController::class);
+    Route::get('/', HomeController::class);
 
-Route::get('preguntas/{pregunta}/edit', [PreguntaController::class, 'edit'])->name('preguntas.edit');
+    Route::get('asignaturas/{curso}/cuestionario/editar', [PreguntaController::class, 'editarCuestionario'])->name('preguntas.editarcuestionario');
+    
+    Route::get('asignaturas/{curso}/cuestionario/editarpregunta', [PreguntaController::class, 'editPregunta'])->name('preguntas.editpreguntas');
 
-Route::put('preguntas/{pregunta}', [PreguntaController::class, 'update'])->name('preguntas.update');
+    Route::get('asignaturas/{curso}/preguntas/{pregunta}/edit', [PreguntaController::class, 'edit'])->name('preguntas.edit');
 
-Route::delete('preguntas/{pregunta}', [PreguntaController::class, 'destroy'])->name('preguntas.destroy');
+    Route::put('asignaturas/{curso}/preguntas/{pregunta}', [PreguntaController::class, 'update'])->name('preguntas.update');
+
+    Route::delete('asignaturas/{curso}/preguntas/{pregunta}', [PreguntaController::class, 'destroy'])->name('preguntas.destroy');
 
 
-Route::get('asignaturas/{curso}/cuestionarios', [CursoController::class, 'cuestionarios'])->name('cursos.cuestionarios');
 
-Route::post('asignaturas/{curso}/preguntas', [PreguntaController::class, 'store'])->name('preguntas.store');
+    Route::get('asignaturas/{curso}/cuestionarios', [CursoController::class, 'cuestionarios'])->name('cursos.cuestionarios');
 
-Route::resource('asignaturas', CursoController::class)->parameters(['asignaturas' => 'curso'])->names('cursos');
+    Route::post('asignaturas/{curso}/preguntas', [PreguntaController::class, 'store'])->name('preguntas.store');
+
+    Route::resource('asignaturas', CursoController::class)->parameters(['asignaturas' => 'curso'])->names('cursos');
 
