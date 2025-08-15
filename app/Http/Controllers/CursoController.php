@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCurso;
 use App\Models\Curso;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 use Illuminate\Http\Request;
 
@@ -11,50 +14,101 @@ use function PHPUnit\Framework\returnSelf;
 
 class CursoController extends Controller
 {
-    public function index(){
-        $cursos = Curso::orderBy('id','desc')->paginate();
-        return view('cursos.index', compact('cursos'));
-    }
-    public function create(){
-        return view('cursos.create');
-    }
-
-    public function store(StoreCurso $request){
-        $curso  = Curso::create($request->all());
-        return redirect()->route('cursos.show',$curso);
+    public function index()
+    {
+        try {
+            $cursos = Curso::orderBy('id', 'desc')->paginate();
+            return view('cursos.index', compact('cursos'));
+        } catch (Exception $e) {
+            Log::error('Error al listar cursos: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo cargar la lista de cursos.');
+        }
     }
 
-    public function show($id){
-        $curso = Curso::with('cuestionario.preguntas')->findOrFail($id);
-        $curso = Curso::find($id);
-        return view('cursos.show',compact('curso'));
+    public function create()
+    {
+        try {
+            return view('cursos.create');
+        } catch (Exception $e) {
+            Log::error('Error al cargar formulario de creación: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo cargar el formulario de creación.');
+        }
     }
 
-    public function edit(Curso $curso){
-        return view('cursos.edit', compact('curso'));
+    public function store(StoreCurso $request)
+    {
+        try {
+            $curso = Curso::create($request->all());
+            return redirect()->route('cursos.show', $curso)->with('success', 'Curso creado correctamente.');
+        } catch (ValidationException $e) {
+            Log::error('Error de validación en store Curso: ' . json_encode($e->errors()));
+            return redirect()->back()->with('error', 'Error de validación al crear el curso.');
+        } catch (Exception $e) {
+            Log::error('Error al guardar curso: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo crear el curso.');
+        }
     }
 
-    public function update(Request $request, Curso $curso){
-        $request->validate([
-            'name'=>'required',
-            'descripcion' => 'required',
-            'categoria' => 'required'
-        ]);
-
-        $curso->update($request->all());
-        return redirect()->route('cursos.show', $curso);
+    public function show($id)
+    {
+        try {
+            $curso = Curso::with('cuestionario.preguntas')->findOrFail($id);
+            return view('cursos.show', compact('curso'));
+        } catch (Exception $e) {
+            Log::error('Error al mostrar curso: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo mostrar el curso.');
+        }
     }
 
-    public function destroy(Curso $curso){
-        $curso->delete();
-
-        return redirect()->route('cursos.index');
+    public function edit(Curso $curso)
+    {
+        try {
+            return view('cursos.edit', compact('curso'));
+        } catch (Exception $e) {
+            Log::error('Error al cargar formulario de edición: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo cargar el formulario de edición.');
+        }
     }
 
-    public function cuestionarios($id){
-        $curso = Curso::findOrfail($id);
-        return view('cursos.cuestionarios', compact('curso'));
+    public function update(Request $request, Curso $curso)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+                'descripcion' => 'required',
+                'categoria' => 'required'
+            ]);
+
+            $curso->update($request->all());
+            return redirect()->route('cursos.show', $curso)->with('success', 'Curso actualizado correctamente.');
+        } catch (ValidationException $e) {
+            Log::error('Error de validación en update Curso: ' . json_encode($e->errors()));
+            return redirect()->back()->with('error', 'Error de validación al actualizar el curso.');
+        } catch (Exception $e) {
+            Log::error('Error al actualizar curso: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo actualizar el curso.');
+        }
     }
 
-    
+    public function destroy(Curso $curso)
+    {
+        try {
+            $curso->delete();
+            return redirect()->route('cursos.index')->with('success', 'Curso eliminado correctamente.');
+        } catch (Exception $e) {
+            Log::error('Error al eliminar curso: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudo eliminar el curso.');
+        }
+    }
+
+    public function cuestionarios($id)
+    {
+        try {
+            $curso = Curso::findOrFail($id);
+            return view('cursos.cuestionarios', compact('curso'));
+        } catch (Exception $e) {
+            Log::error('Error al cargar cuestionarios de curso: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'No se pudieron cargar los cuestionarios del curso.');
+        }
+    }
 }
