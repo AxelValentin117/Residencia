@@ -45,7 +45,7 @@ class CursoController extends Controller
             return response()->json(['message' => 'Error General'],500);
         } catch (Exception $e) {
             Log::error('Error al guardar curso: ' . $e->getMessage());
-            return response()->json(['message' => 'Error General'],500);
+            
         }
     }
 
