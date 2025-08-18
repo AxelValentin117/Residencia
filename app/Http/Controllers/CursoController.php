@@ -39,13 +39,13 @@ class CursoController extends Controller
     {
         try {
             $curso = Curso::create($request->all());
-            return redirect()->route('cursos.show', $curso)->with('success', 'Curso creado correctamente.');
+            return response()->json(['message' => 'Curso Creado Con Exito'], 200);
         } catch (ValidationException $e) {
             Log::error('Error de validación en store Curso: ' . json_encode($e->errors()));
-            return redirect()->back()->with('error', 'Error de validación al crear el curso.');
+            return response()->json(['message' => 'Error General'],500);
         } catch (Exception $e) {
             Log::error('Error al guardar curso: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'No se pudo crear el curso.');
+            return response()->json(['message' => 'Error General'],500);
         }
     }
 
@@ -94,10 +94,10 @@ class CursoController extends Controller
     {
         try {
             $curso->delete();
-            return redirect()->route('cursos.index')->with('success', 'Curso eliminado correctamente.');
+            return response()->json(['message' => 'Curso eliminada Correctamente'],200);
         } catch (Exception $e) {
             Log::error('Error al eliminar curso: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'No se pudo eliminar el curso.');
+             return response()->json(['message' => 'No se pudo borrar la pregunta'],500);
         }
     }
 
