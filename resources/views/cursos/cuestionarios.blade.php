@@ -45,7 +45,7 @@ document.getElementById('cuestionario').addEventListener('submit', function(e) {
 	
 //Redirige si el status fue 2xx (OK)
         if (status >= 200 && status < 300) {
-            window.history.back();
+            window.location.href = "{{ route('cursos.show', $curso) }}";
         }
     })
     .catch(error => alert('No se pudo completar la solicitud')); //Error genérico

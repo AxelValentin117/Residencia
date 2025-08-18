@@ -80,13 +80,13 @@ class CursoController extends Controller
             ]);
 
             $curso->update($request->all());
-            return redirect()->route('cursos.show', $curso)->with('success', 'Curso actualizado correctamente.');
+            return response()->json(['message' => 'Actuazizacion Existosa'],200);
         } catch (ValidationException $e) {
             Log::error('Error de validación en update Curso: ' . json_encode($e->errors()));
-            return redirect()->back()->with('error', 'Error de validación al actualizar el curso.');
+            return response()->json(['message' => 'Mensaje de actuzaliar curso'],500);
         } catch (Exception $e) {
             Log::error('Error al actualizar curso: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'No se pudo actualizar el curso.');
+            return response()->json(['message' => 'Error al actualizar curso'],500);
         }
     }
 

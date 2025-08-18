@@ -62,6 +62,7 @@ class PreguntaController extends Controller
 
     public function update(Request $request, Curso $curso, Pregunta $pregunta)
     {
+        LOG::INFO($request);
         try {
             $request->validate([
                 'text_pregunta' => 'required|string|max:255'
@@ -70,8 +71,8 @@ class PreguntaController extends Controller
             $pregunta->update([
                 'text_pregunta' => $request->text_pregunta
             ]);
-            /*return redirect()->route('cursos.show')->response()->json(['message' => 'Actuazizacion Existosa'],200);*/
-            return redirect()->route('cursos.show', $curso)->with('success', 'Pregunta actualizada correctamente.');
+            return response()->json(['message' => 'Actuazizacion Existosa'],200);
+            
         } catch (ValidationException $e) {
             Log::error('Validación fallida en update: ' . json_encode($e->errors()));
             return response()->json(['message' => 'Mensaje de actuzaliar pregunta'],500);
@@ -91,10 +92,10 @@ class PreguntaController extends Controller
                 $cuestionario->delete();
             }
 
-            return redirect()->route('cursos.show', $curso)->with('success', 'Pregunta eliminada correctamente.');
+            return response()->json(['message' => 'Pregunta eliminada Correctamente'],200);
         } catch (Exception $e) {
             Log::error('Error al eliminar pregunta: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'No se pudo eliminar la pregunta.');
+            return response()->json(['message' => 'No se pudo borrar la pregunta'],500);
         }
     }
 

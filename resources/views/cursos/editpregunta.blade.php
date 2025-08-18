@@ -5,7 +5,7 @@
 @section('content')
     <h1>Editar pregunta en: {{ $curso->name }}</h1>
 
-    <form action="{{ route('preguntas.update', [$curso, $pregunta]) }}" id="editarcuestionario" method="POST">
+    <form action="{{ route('preguntas.update', [$curso, $pregunta]) }}" id="editarpregunta" method="POST">
         @csrf
         @method('PUT')
 
@@ -20,7 +20,7 @@
     <a href="{{ route('preguntas.editarcuestionario', $curso) }}">Volver al cuestionario</a>
 
     <script>
-document.getElementById('editarcuestionario').addEventListener('submit', function(e) {
+document.getElementById('editarpregunta').addEventListener('submit', function(e) {
     e.preventDefault(); // Evitamos el envío del formulario
 
     // Conversión del form para enviarlo en la petición
@@ -28,9 +28,10 @@ document.getElementById('editarcuestionario').addEventListener('submit', functio
 
     const token = formData.get('_token');
     const method = formData.get('_method');
+    console.log(formData);
 
     fetch(this.action, {
-        method: method, //Utiliza el método del form
+        method: 'POST', //Utiliza el método del form
         headers: {
             'X-CSRF-TOKEN': token //Envía el token único de la sesión
         },
@@ -45,10 +46,11 @@ document.getElementById('editarcuestionario').addEventListener('submit', functio
 	
 //Redirige si el status fue 2xx (OK)
         if (status >= 200 && status < 300) {
-            window.history.back();
+            window.location.href="{{ route('preguntas.editarcuestionario', $curso) }}";
         }
     })
     .catch(error => alert('No se pudo completar la solicitud')); //Error genérico
+
 });
 </script>
 @endsection
