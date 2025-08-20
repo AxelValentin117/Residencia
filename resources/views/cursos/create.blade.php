@@ -43,11 +43,14 @@
 document.getElementById('CrearCurso').addEventListener('submit', function(e) {
     e.preventDefault(); // Evitamos el envío del formulario
 
+    // Obtener el botón del formulario
+    const submitButton = this.querySelector('button[type="submit"]');
+    submitButton.disabled = true; 
+
     // Conversión del form para enviarlo en la petición
     const formData = new FormData(this);
-
     const token = formData.get('_token');
-
+    
     fetch(this.action, {
         method: this.method, //Utiliza el método del form
         headers: {
@@ -56,19 +59,25 @@ document.getElementById('CrearCurso').addEventListener('submit', function(e) {
         body: formData // Pasa los datos del form al request
     })
     .then(response => {
-        const status = response.status; //Obtiene el estado de la respuesta
-        return response.json().then(data => ({ status, data })); 
+        const status = response.status;
+        return response.json().then(data => ({ status, data }));
     })
     .then(({ status, data }) => {
-        alert(data.message); // Mostramos mensaje del backend
-	
-//Redirige si el status fue 2xx (OK)
+        alert(data.message);
+
         if (status >= 200 && status < 300) {
             window.location.href = "{{ route('cursos.index') }}";
         }
     })
-    .catch(error => alert('No se pudo completar la solicitud')); //Error genérico
+    .catch(error => {
+        alert('No se pudo completar la solicitud');
+        console.error(error);
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+    });
 });
 </script>
+
 
 @endsection
