@@ -19,7 +19,7 @@
                             <a href="{{ route('cursos.show', $curso->id) }}" class="text-decoration-none fw-semibold">
                                 {{ $curso->name }}
                             </a>
-                            <span class="badge bg-secondary">ID: {{ $curso->id }}</span>
+                            <span class="badge bg-secondary">Fecha: {{ $curso->created_at }}</span>
                         </li>
                     @endforeach
                 </ul>
