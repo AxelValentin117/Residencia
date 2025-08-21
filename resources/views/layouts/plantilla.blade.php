@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - Mi Plataforma</title>
 
-    <!-- Bootstrap 5 desde CDN -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Estilos personalizados opcionales -->
+
     <style>
         body {
-            background-color: #f8f9fa; /* gris clarito de fondo */
+            background-color: #f8f9fa;
         }
         .main-container {
             margin-top: 30px;
@@ -23,7 +23,7 @@
             overflow: hidden;
         }
         .section-header {
-            background-color: #0d6efd; /* azul bootstrap */
+            background-color: #0d6efd;
             color: white;
             padding: 15px;
             font-size: 1.4rem;
@@ -39,18 +39,15 @@
 
     <div class="container main-container">
         <div class="section-card">
-            <!-- Título dinámico de cada vista -->
             <div class="section-header">
                 @yield('title')
             </div>
 
-            <!-- Contenido dinámico -->
             <div class="section-body">
                 @yield('content')
             </div>
         </div>
 
-        <!-- Alertas globales -->
         @if(session('success'))
             <div class="alert alert-success mt-3">
                 {{ session('success') }}

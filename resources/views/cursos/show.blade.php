@@ -1,41 +1,62 @@
 @extends('layouts.plantilla')
-@section('title','curso ' . $curso->name)
+
+@section('title','Curso: ' . $curso->name)
 
 @section('content')
-    <h1>Bienvenido al curso {{ $curso->name }}</h1>
+    <div class="mb-4">
+        <h1 class="h3">Bienvenido al curso <span class="text-primary">{{ $curso->name }}</span></h1>
+    </div>
 
-    <a href="{{ route('cursos.index') }}">Volver al cursos</a>  
-    <a href="{{ route('cursos.edit', $curso) }}">Editar Curso</a>
-    <a href="{{ route('cursos.cuestionarios', $curso->id) }}">Crear cuestionarios</a>
+    {{-- Botones de acciones --}}
+    <div class="mb-3 d-flex flex-wrap gap-2">
+        <a href="{{ route('cursos.index') }}" class="btn btn-secondary btn-sm">← Volver a cursos</a>
+        <a href="{{ route('cursos.edit', $curso) }}" class="btn btn-warning btn-sm">✏️ Editar Curso</a>
+        <a href="{{ route('cursos.cuestionarios', $curso->id) }}" class="btn btn-info btn-sm text-white">📝 Crear cuestionarios</a>
+    </div>
 
-    <p><strong>Categoria:</strong> {{ $curso->categoria }}</p>
-    <p>{{ $curso->descripcion }}</p>
+    {{-- Datos del curso --}}
+    <div class="mb-4">
+        <p><strong>Categoría:</strong> <span class="badge bg-primary">{{ $curso->categoria }}</span></p>
+        <p>{{ $curso->descripcion }}</p>
+    </div>
 
-    <form onsubmit="BorrarCurso(event,this)" action="{{ route('cursos.destroy', $curso) }}" method="POST">
+    {{-- Eliminar curso --}}
+    <form onsubmit="BorrarCurso(event,this)" 
+          action="{{ route('cursos.destroy', $curso) }}" 
+          method="POST" 
+          class="mb-4">
         @csrf
         @method('DELETE')
-        <button type="submit" onclick="return confirm('¿Eliminar curso?')">Eliminar</button>
+        <button type="submit" class="btn btn-danger"
+                onclick="return confirm('¿Eliminar curso?')">
+            🗑️ Eliminar Curso
+        </button>
     </form>
 
-    <br>
-    <a href="{{ route('preguntas.editarcuestionario', $curso) }}">Editar cuestionario</a>
-    <br>
+    {{-- Editar cuestionario --}}
+    <div class="mb-4">
+        <a href="{{ route('preguntas.editarcuestionario', $curso) }}" class="btn btn-outline-primary">
+            ✏️ Editar cuestionario
+        </a>
+    </div>
 
-    <h2>Preguntas del cuestionario</h2>
+    {{-- Preguntas --}}
+    <h2 class="h5">Preguntas del cuestionario</h2>
 
     @if($curso->cuestionario && $curso->cuestionario->preguntas->count() > 0)
-        <ul>
+        <ul class="list-group mb-4">
             @foreach($curso->cuestionario->preguntas as $pregunta)
-                <li>{{ $pregunta->text_pregunta }}</li>
+                <li class="list-group-item">{{ $pregunta->text_pregunta }}</li>
             @endforeach
         </ul>
     @else
-        <p>No hay preguntas aún.</p>
+        <div class="alert alert-info">No hay preguntas aún.</div>
     @endif
 
+    {{-- Script de eliminación con fetch --}}
     <script>
     function BorrarCurso(event, formulario) {
-        event.preventDefault(); // Evita el envío normal del form
+        event.preventDefault();
 
         const formData = new FormData(formulario);
         const token = formData.get('_token');
@@ -52,14 +73,25 @@
             return response.json().then(data => ({ status, data }));
         })
         .then(({ status, data }) => {
-            alert(data.message);
+            // Mostrar alert de Bootstrap dinámicamente
+            const alert = document.createElement('div');
+            alert.className = "alert mt-3 " + (status >= 200 && status < 300 ? "alert-success" : "alert-danger");
+            alert.innerText = data.message || "Ocurrió un error";
+
+            document.querySelector('.section-body').prepend(alert);
+
             if (status >= 200 && status < 300) {
-                window.location.href = "{{ route('cursos.index') }}";
+                setTimeout(() => {
+                    window.location.href = "{{ route('cursos.index') }}";
+                }, 1500);
             }
         })
         .catch(error => {
-            alert('No se pudo completar la solicitud');
             console.error(error);
+            const alert = document.createElement('div');
+            alert.className = "alert alert-danger mt-3";
+            alert.innerText = 'No se pudo completar la solicitud';
+            document.querySelector('.section-body').prepend(alert);
         });
     }
     </script>
