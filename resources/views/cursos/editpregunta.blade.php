@@ -3,54 +3,71 @@
 @section('title', 'Editar pregunta')
 
 @section('content')
-    <h1>Editar pregunta en: {{ $curso->name }}</h1>
+    <h1 class="h4 mb-4">Editar pregunta en: <span class="text-primary">{{ $curso->name }}</span></h1>
 
-    <form action="{{ route('preguntas.update', [$curso, $pregunta]) }}" id="editarpregunta" method="POST">
-        @csrf
-        @method('PUT')
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="{{ route('preguntas.update', [$curso, $pregunta]) }}" id="editarpregunta" method="POST">
+                @csrf
+                @method('PUT')
 
-        <label for="text_pregunta">Pregunta:</label><br>
-        <textarea name="text_pregunta" id="text_pregunta" rows="5" required>{{ old('text_pregunta', $pregunta->text_pregunta) }}</textarea>
-        <br><br>
+                <div class="mb-3">
+                    <label for="text_pregunta" class="form-label">Pregunta</label>
+                    <textarea 
+                        name="text_pregunta" 
+                        id="text_pregunta" 
+                        rows="4" 
+                        class="form-control" 
+                        required>{{ old('text_pregunta', $pregunta->text_pregunta) }}</textarea>
+                </div>
 
-        <button type="submit">Actualizar pregunta</button>
-    </form>
-
-    <br>
-    <a href="{{ route('preguntas.editarcuestionario', $curso) }}">Volver al cuestionario</a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Actualizar pregunta
+                </button>
+                <a href="{{ route('preguntas.editarcuestionario', $curso) }}" class="btn btn-secondary">
+                    Volver al cuestionario
+                </a>
+            </form>
+        </div>
+    </div>
 
     <script>
-document.getElementById('editarpregunta').addEventListener('submit', function(e) {
-    e.preventDefault(); // Evitamos el envío del formulario
+    document.getElementById('editarpregunta').addEventListener('submit', function(e) {
+        e.preventDefault(); 
 
-    // Conversión del form para enviarlo en la petición
-    const formData = new FormData(this);
+        const formData = new FormData(this);
+        const token = formData.get('_token');
 
-    const token = formData.get('_token');
-    const method = formData.get('_method');
-    console.log(formData);
+        fetch(this.action, {
+            method: 'POST', // Laravel respeta _method=PUT
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            body: formData
+        })
+        .then(response => {
+            const status = response.status;
+            return response.json().then(data => ({ status, data }));
+        })
+        .then(({ status, data }) => {
+            // Mostrar alert de Bootstrap
+            const alert = document.createElement('div');
+            alert.className = "alert mt-3 " + (status >= 200 && status < 300 ? "alert-success" : "alert-danger");
+            alert.innerText = data.message || "Ocurrió un error";
+            document.querySelector('.card-body').prepend(alert);
 
-    fetch(this.action, {
-        method: 'POST', //Utiliza el método del form
-        headers: {
-            'X-CSRF-TOKEN': token //Envía el token único de la sesión
-        },
-        body: formData // Pasa los datos del form al request
-    })
-    .then(response => {
-        const status = response.status; //Obtiene el estado de la respuesta
-        return response.json().then(data => ({ status, data })); 
-    })
-    .then(({ status, data }) => {
-        alert(data.message); // Mostramos mensaje del backend
-	
-//Redirige si el status fue 2xx (OK)
-        if (status >= 200 && status < 300) {
-            window.location.href="{{ route('preguntas.editarcuestionario', $curso) }}";
-        }
-    })
-    .catch(error => alert('No se pudo completar la solicitud')); //Error genérico
-
-});
-</script>
+            if (status >= 200 && status < 300) {
+                setTimeout(() => {
+                    window.location.href="{{ route('preguntas.editarcuestionario', $curso) }}";
+                }, 1500);
+            }
+        })
+        .catch(error => {
+            const alert = document.createElement('div');
+            alert.className = "alert alert-danger mt-3";
+            alert.innerText = "No se pudo completar la solicitud";
+            document.querySelector('.card-body').prepend(alert);
+        });
+    });
+    </script>
 @endsection
