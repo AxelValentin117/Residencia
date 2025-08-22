@@ -22,7 +22,7 @@
             @error('titulo')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
+        </div>x
 
         {{-- Pregunta --}}
         <div class="mb-3">
